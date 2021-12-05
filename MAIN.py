@@ -178,17 +178,17 @@ class XoLayer(layers.Layer):
         self.profun_fac = tf.cast(tf.math.round(profun*fact),dtype=tf.int32)
 
           
-        self.kernel = self.add_weight(shape=(tf.cast(tf.math.round(profun*fact),dtype=tf.int32),tf.cast(tf.math.round(largo*fact),dtype=tf.int32)*tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),
+        self.kernel = self.add_weight(shape=(tf.cast(tf.math.round(profun*fact),dtype=tf.int32),tf.cast(tf.math.round(largo*fact),dtype=tf.int32)*tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)), dtype = 'int8',
                              initializer='glorot_normal',#'glorot_normal',
                              trainable=True)
            
-        self.Dx    = self.add_weight(shape=(largo, tf.cast(tf.math.round(largo*fact),dtype=tf.int32)),
+        self.Dx    = self.add_weight(shape=(largo, tf.cast(tf.math.round(largo*fact),dtype=tf.int32)),dtype = 'int8',
                              initializer='uniform', # uniform
                              trainable=True)
-        self.Dy    = self.add_weight(shape=(ancho,tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),
+        self.Dy    = self.add_weight(shape=(ancho,tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),dtype = 'int8',
                              initializer='uniform',
                              trainable=True)
-        self.Dz    = self.add_weight(shape=(profun,tf.cast(tf.math.round(profun*fact),dtype=tf.int32)),
+        self.Dz    = self.add_weight(shape=(profun,tf.cast(tf.math.round(profun*fact),dtype=tf.int32)),dtype = 'int8',
                             initializer='uniform',
                              trainable=True)
 
@@ -196,7 +196,7 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        Aux = tf.transpose(tf.matmul(self.Dz,tf.math.round(self.kernel)))
+        Aux = tf.transpose(tf.matmul(self.Dz,self.kernel))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
 
         Aux = tf.matmul(self.Dx,Aux)
