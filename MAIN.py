@@ -196,7 +196,7 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        Aux = tf.transpose(tf.matmul(self.Dz,self.kernel))
+        Aux = tf.transpose(tf.matmul(self.Dz,tf.math.round(self.kernel)))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
 
         Aux = tf.matmul(self.Dx,Aux)
