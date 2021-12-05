@@ -178,17 +178,17 @@ class XoLayer(layers.Layer):
         self.profun_fac = tf.cast(tf.math.round(profun*fact),dtype=tf.int32)
 
           
-        self.kernel = self.add_weight(shape=(tf.cast(tf.math.round(profun*fact),dtype=tf.int32),tf.cast(tf.math.round(largo*fact),dtype=tf.int32)*tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)), dtype = 'int8',
+        self.kernel = self.add_weight(shape=(tf.cast(tf.math.round(profun*fact),dtype=tf.int32),tf.cast(tf.math.round(largo*fact),dtype=tf.int32)*tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)), 
                              initializer='glorot_normal',#'glorot_normal',
                              trainable=True)
            
-        self.Dx    = self.add_weight(shape=(largo, tf.cast(tf.math.round(largo*fact),dtype=tf.int32)),dtype = 'int8',
+        self.Dx    = self.add_weight(shape=(largo, tf.cast(tf.math.round(largo*fact),dtype=tf.int32)),
                              initializer='uniform', # uniform
                              trainable=True)
-        self.Dy    = self.add_weight(shape=(ancho,tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),dtype = 'int8',
+        self.Dy    = self.add_weight(shape=(ancho,tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),
                              initializer='uniform',
                              trainable=True)
-        self.Dz    = self.add_weight(shape=(profun,tf.cast(tf.math.round(profun*fact),dtype=tf.int32)),dtype = 'int8',
+        self.Dz    = self.add_weight(shape=(profun,tf.cast(tf.math.round(profun*fact),dtype=tf.int32)),
                             initializer='uniform',
                              trainable=True)
 
@@ -196,9 +196,7 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        kernel_ = tf.quantization.fake_quant_with_min_max_args(
-    self.kernel, min=tf.math.minimum(self.kernel), max=tf.math.maximum(self.kernel), num_bits=8, narrow_range=False, name=None
-)
+        #kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=tf.math.minimum(self.kernel), max=tf.math.maximum(self.kernel), num_bits=8, narrow_range=False, name=None)
         
         Aux = tf.transpose(tf.matmul(self.Dz,kernel_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
