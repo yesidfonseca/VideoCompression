@@ -196,14 +196,18 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        Aux = tf.transpose(tf.matmul(tf.math.round(self.Dz),tf.math.round(self.kernel)))
+        kernel_ = tf.quantization.fake_quant_with_min_max_args(
+    self.kernel, min=tf.math.minimum(self.kernel), max=tf.math.maximum(self.kernel), num_bits=8, narrow_range=False, name=None
+)
+        
+        Aux = tf.transpose(tf.matmul(self.Dz,kernel_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
 
-        Aux = tf.matmul(tf.round(self.Dx),Aux)
+        Aux = tf.matmul(self.Dx,Aux)
         Aux = tf.reshape(Aux,(self.largo,self.ancho_fac,self.profun))
         Aux = tf.transpose(Aux,perm=[1,0,2])
         Aux = tf.reshape(Aux,(self.ancho_fac,self.ancho*self.profun))
-        Aux = tf.matmul(tf.math.round(self.Dy),Aux)
+        Aux = tf.matmul(self.Dy,Aux)
         Aux = tf.reshape(Aux,(self.ancho,self.largo,self.profun))
         Aux = tf.reshape(tf.transpose(Aux,perm=[1,0,2]),(1,self.ancho,self.largo,self.profun))
         
