@@ -198,7 +198,7 @@ class XoLayer(layers.Layer):
         
         #kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=tf.math.minimum(self.kernel), max=tf.math.maximum(self.kernel), num_bits=8, narrow_range=False, name=None)
         
-        Aux = tf.transpose(tf.matmul(self.Dz,kernel_))
+        Aux = tf.transpose(tf.matmul(self.Dz,self.kernel))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
 
         Aux = tf.matmul(self.Dx,Aux)
