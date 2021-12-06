@@ -197,15 +197,18 @@ class XoLayer(layers.Layer):
     def call(self, inputs):
         
         kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
+        Dx_ = tf.quantization.fake_quant_with_min_max_args(self.Dx, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
+        Dy_ = tf.quantization.fake_quant_with_min_max_args(self.Dy, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
+        Dz_ = tf.quantization.fake_quant_with_min_max_args(self.Dz, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
         
-        Aux = tf.transpose(tf.matmul(self.Dz,kernel_))
+        Aux = tf.transpose(tf.matmul(Dz_,kernel_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
 
-        Aux = tf.matmul(self.Dx,Aux)
+        Aux = tf.matmul(Dx_,Aux)
         Aux = tf.reshape(Aux,(self.largo,self.ancho_fac,self.profun))
         Aux = tf.transpose(Aux,perm=[1,0,2])
         Aux = tf.reshape(Aux,(self.ancho_fac,self.ancho*self.profun))
-        Aux = tf.matmul(self.Dy,Aux)
+        Aux = tf.matmul(Dy_,Aux)
         Aux = tf.reshape(Aux,(self.ancho,self.largo,self.profun))
         Aux = tf.reshape(tf.transpose(Aux,perm=[1,0,2]),(1,self.ancho,self.largo,self.profun))
         
