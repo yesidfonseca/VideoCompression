@@ -374,7 +374,7 @@ class myCallback(tf.keras.callbacks.Callback):
             
             psnr = fun_PSNR(img,result)
             self.my_PSNR.append(psnr) 
-            print('Epoch %05d: PSNR %6.3f : Max PSNR %6.3f' % (epoch, psnr,np.max([psnr,self.BestPSNR])))
+            
             
             if psnr >= self.BestPSNR:                
                 self.Best = result
@@ -392,4 +392,5 @@ class myCallback(tf.keras.callbacks.Callback):
             self.model.layers[2].rate=0.5
             
             VisualGraphs(result,self.Best,xo,self.my_PSNR,img,self.ColorBands)
+            print('Epoch %05d: PSNR %6.3f : Max PSNR %6.3f' % (epoch, psnr,np.max([psnr,self.BestPSNR])))
            
