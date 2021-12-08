@@ -357,7 +357,7 @@ class myCallback(tf.keras.callbacks.Callback):
         
         
         
-        if np.mod(epoch,Freq*5)==0:            
+        if np.mod(epoch,Freq)==0:            
             img = self.Xorig;
                         
             
@@ -387,7 +387,7 @@ class myCallback(tf.keras.callbacks.Callback):
                                 
             setattr(self.model, 'PSNRs', self.my_PSNR)
             
-        if np.mod(epoch,Freq*5)==0: 
+        if np.mod(epoch,Freq)==0: 
 
             self.model.layers[2].rate=0.5
             
