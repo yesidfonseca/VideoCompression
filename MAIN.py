@@ -172,6 +172,8 @@ class XoLayer(layers.Layer):
         self.largo  = largo
         self.ancho  = ancho
         self.profun  = profun
+        self.Max = 1.0;
+        self.Min = -1.0;
 
         self.largo_fac = tf.cast(tf.math.round(largo*fact),dtype=tf.int32)
         self.ancho_fac = tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)
@@ -196,10 +198,10 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
-        Dx_ = tf.quantization.fake_quant_with_min_max_args(self.Dx, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
-        Dy_ = tf.quantization.fake_quant_with_min_max_args(self.Dy, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
-        Dz_ = tf.quantization.fake_quant_with_min_max_args(self.Dz, min=-1.0, max=1.0, num_bits=8, narrow_range=False, name=None)
+        kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
+        Dx_ = tf.quantization.fake_quant_with_min_max_args(self.Dx, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
+        Dy_ = tf.quantization.fake_quant_with_min_max_args(self.Dy, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
+        Dz_ = tf.quantization.fake_quant_with_min_max_args(self.Dz, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
         
         Aux = tf.transpose(tf.matmul(Dz_,kernel_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
@@ -345,6 +347,7 @@ class myCallback(tf.keras.callbacks.Callback):
         self.Best = np.zeros(shape=Xorig.shape);
         self.Freq = Freq
         self.ColorBands = ColorBands
+        self.BestWeights = [];
         
 
     def on_epoch_end(self, epoch, logs={}):
@@ -352,7 +355,7 @@ class myCallback(tf.keras.callbacks.Callback):
         self.model.layers[2].rate=0.0
         
         
-        if np.mod(epoch,Freq)==0:            
+        if np.mod(epoch,Freq*5)==0:            
             img = self.Xorig;
             
             
@@ -373,7 +376,9 @@ class myCallback(tf.keras.callbacks.Callback):
             
             if psnr >= np.max(self.my_PSNR):                
                 self.Best = result
+                self.BestWeights = self.model.get_weights()
                 setattr(self.model, 'Best', self.Best)
+                setattr(self.model, 'BestWeights', self.BestWeights)
             
                                 
             setattr(self.model, 'PSNRs', self.my_PSNR)
