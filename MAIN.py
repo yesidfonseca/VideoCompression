@@ -198,7 +198,7 @@ class XoLayer(layers.Layer):
         
     def call(self, inputs):
         
-        kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
+        kernel_ = tf.quantization.fake_quant_with_min_max_args(self.kernel*self.Max, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
         Dx_ = tf.quantization.fake_quant_with_min_max_args(self.Dx, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
         Dy_ = tf.quantization.fake_quant_with_min_max_args(self.Dy, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
         Dz_ = tf.quantization.fake_quant_with_min_max_args(self.Dz, min=self.Min, max=self.Max, num_bits=8, narrow_range=False, name=None)
@@ -358,7 +358,7 @@ class myCallback(tf.keras.callbacks.Callback):
         if np.mod(epoch,Freq*5)==0:            
             img = self.Xorig;
             
-            self.model.layers[1].Dx = self.model.layers[1].Dx*0
+            self.model.layers[1].Max = 0
             
             
             [m,n,L] = img.shape
