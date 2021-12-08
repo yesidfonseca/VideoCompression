@@ -352,11 +352,13 @@ class myCallback(tf.keras.callbacks.Callback):
 
     def on_epoch_end(self, epoch, logs={}):
         Freq = self.Freq
-        self.model.layers[2].rate=0.0
+        
         
         
         if np.mod(epoch,Freq*5)==0:            
             img = self.Xorig;
+            
+            self.model.layers[1].Dx = self.model.layers[1].Dx*0
             
             
             [m,n,L] = img.shape
