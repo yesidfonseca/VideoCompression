@@ -166,14 +166,14 @@ def Hxfunction2(x,largo,ancho,profun,H):
 
 
 class XoLayer(layers.Layer):
-    def __init__(self, largo = 256, ancho = 256, profun = 10, fact = 0.3,Nbits = 8):
+    def __init__(self, largo = 256, ancho = 256, profun = 10, fact = 0.3,Nbits = 8, MaxValue =1,MinValue=-1):
         super(XoLayer, self).__init__()
 
         self.largo  = largo
         self.ancho  = ancho
         self.profun  = profun
-        self.Max = 1.0;
-        self.Min = -1.0;
+        self.Max =MaxValue;
+        self.Min = MinValue;
         self.Nbits = Nbits
 
         self.largo_fac = tf.cast(tf.math.round(largo*fact),dtype=tf.int32)
@@ -341,11 +341,12 @@ from keras import backend as K
 class myCallback(tf.keras.callbacks.Callback):
      
 
-    def __init__(self,Xorig=0,Freq=0,ColorBands = 0):
+    def __init__(self,Xorig=0,Freq=0,ColorBands = 0,BestPSNR = 0, Best = 0):
         super(myCallback, self).__init__()
         self.my_PSNR = []
         self.Xorig = Xorig;
-        self.Best = np.zeros(shape=Xorig.shape);
+        self.Best = Best;
+        self.BestPSNR = BestPSNR;
         self.Freq = Freq
         self.ColorBands = ColorBands
         self.BestWeights = [];
@@ -373,13 +374,15 @@ class myCallback(tf.keras.callbacks.Callback):
             
             psnr = fun_PSNR(img,result)
             self.my_PSNR.append(psnr) 
-            print('Epoch %05d: PSNR %6.3f : Max PSNR %6.3f' % (epoch, psnr,np.max(self.my_PSNR)))
+            print('Epoch %05d: PSNR %6.3f : Max PSNR %6.3f' % (epoch, psnr,np.max([psnr,self.BestPSNR])))
             
-            if psnr >= np.max(self.my_PSNR):                
+            if psnr >= self.BestPSNR:                
                 self.Best = result
                 self.BestWeights = self.model.get_weights()
+                self.BestPSNR = psnr
                 setattr(self.model, 'Best', self.Best)
                 setattr(self.model, 'BestWeights', self.BestWeights)
+                setattr(self.model, 'BestPSNR', self.BestPSNR)
             
                                 
             setattr(self.model, 'PSNRs', self.my_PSNR)
