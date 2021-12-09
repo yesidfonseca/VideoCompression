@@ -166,7 +166,7 @@ def Hxfunction2(x,largo,ancho,profun,H):
 
 
 class XoLayer(layers.Layer):
-    def __init__(self, largo = 256, ancho = 256, profun = 10, fact = 0.3,Nbits = 8, MaxValue =1,MinValue=-1):
+    def __init__(self, largo = 256, ancho = 256, profun = 10, factXY = 0.3,factZ=.3,Nbits = 8, MaxValue =1,MinValue=-1):
         super(XoLayer, self).__init__()
 
         self.largo  = largo
@@ -176,22 +176,22 @@ class XoLayer(layers.Layer):
         self.Min = MinValue;
         self.Nbits = Nbits
 
-        self.largo_fac = tf.cast(tf.math.round(largo*fact),dtype=tf.int32)
-        self.ancho_fac = tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)
-        self.profun_fac = tf.cast(tf.math.round(profun*fact),dtype=tf.int32)
+        self.largo_fac = tf.cast(tf.math.round(largo*factXY),dtype=tf.int32)
+        self.ancho_fac = tf.cast(tf.math.round(ancho*factXY),dtype=tf.int32)
+        self.profun_fac = tf.cast(tf.math.round(profun*factZ),dtype=tf.int32)
 
           
-        self.kernel = self.add_weight(shape=(tf.cast(tf.math.round(profun*fact),dtype=tf.int32),tf.cast(tf.math.round(largo*fact),dtype=tf.int32)*tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)), 
+        self.kernel = self.add_weight(shape=(self.profun_fac,self.largo_fac*self.ancho_fac), 
                              initializer='glorot_normal',#'glorot_normal',
                              trainable=True)
            
-        self.Dx    = self.add_weight(shape=(largo, tf.cast(tf.math.round(largo*fact),dtype=tf.int32)),
+        self.Dx    = self.add_weight(shape=(largo, self.largo_fac),
                              initializer='uniform', # uniform
                              trainable=True)
-        self.Dy    = self.add_weight(shape=(ancho,tf.cast(tf.math.round(ancho*fact),dtype=tf.int32)),
+        self.Dy    = self.add_weight(shape=(ancho,self.ancho_fac),
                              initializer='uniform',
                              trainable=True)
-        self.Dz    = self.add_weight(shape=(profun,tf.cast(tf.math.round(profun*fact),dtype=tf.int32)),
+        self.Dz    = self.add_weight(shape=(profun,self.profun_fac),
                             initializer='uniform',
                              trainable=True)
 
