@@ -1,0 +1,12 @@
+load LegoCars.mat
+x = rescale(hyperimg,0,1);
+x = x*255;
+x = uint8(x);
+v = VideoWriter('LegoCars.mp4','MPEG-4');
+v.Quality = 100;
+open(v)
+writeVideo(v,reshape(x,256,256,1,10))
+close(v)
+
+vidObj = VideoReader('LegoCars.mp4');
+
