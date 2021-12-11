@@ -181,11 +181,11 @@ class XoLayer(layers.Layer):
         self.profun_fac = tf.cast(tf.math.round(profun*factZ),dtype=tf.int32)
 
           
-        self.kernel = self.add_weight(shape=(self.profun_fac,self.largo_fac*self.ancho_fac), 
+        self.kernel = self.add_weight(shape=(self.largo_fac*self.ancho_fac,self.profun_fac), 
                              initializer=tf.keras.initializers.Constant(value=0.01),#'glorot_normal',
                              trainable=True)
            
-        self.Dx    = self.add_weight(shape=(largo, self.largo_fac),
+        self.Dx    = self.add_weight(shape=(self.profun_fac,largo),
                              initializer=tf.keras.initializers.Constant(value=0.01), # uniform
                              trainable=True)
         self.Dy    = self.add_weight(shape=(ancho,self.ancho_fac),
@@ -215,7 +215,7 @@ class XoLayer(layers.Layer):
         #Aux = tf.reshape(Aux,(self.ancho,self.largo,self.profun))
         #Aux = tf.reshape(tf.transpose(Aux,perm=[1,0,2]),(1,self.ancho,self.largo,self.profun))
         
-        Aux = tf.transpose(tf.matmul(Dz_,kernel_))
+        Aux = tf.transpose(tf.matmul(kernel_,Dz_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
         Aux = tf.matmul(Dx_,Aux)
         Aux = tf.reshape(Aux,(self.largo,self.ancho_fac,self.profun))
