@@ -29,8 +29,9 @@ def VisualGraphs(RstActual,RstBest,ZTuckerRepr,ConvCurve,Original,ColorBands):
     [m,n,L]=Original.shape
     
     #Choose 3 uniform bands from low-Rank Tucker Representation of Z            
-    bands = np.floor( np.linspace(L/4, 3*L/4, num=3)).astype(int)
-    xo = ZTuckerRepr[:,:,[bands[0],bands[1],bands[2]]]
+    #bands = np.floor( np.linspace(L/4, 3*L/4, num=3)).astype(int)
+    #xo = ZTuckerRepr[:,:,[bands[0],bands[1],bands[2]]]
+    xo = ZTuckerRepr[:,:,ColorBands]
     xo[:,:,0] = (xo[:,:,0]-np.min(xo[:,:,0]))/(np.max(xo[:,:,0])-np.min(xo[:,:,0]))
     xo[:,:,1] = (xo[:,:,1]-np.min(xo[:,:,1]))/(np.max(xo[:,:,1])-np.min(xo[:,:,1]))
     xo[:,:,2] = (xo[:,:,2]-np.min(xo[:,:,2]))/(np.max(xo[:,:,2])-np.min(xo[:,:,2]))
