@@ -188,7 +188,7 @@ class XoLayer(layers.Layer):
         self.Dx    = self.add_weight(shape=(largo,self.largo_fac),
                              initializer=tf.keras.initializers.Constant(value=0.01), # uniform
                              trainable=True)
-        self.Dy    = self.add_weight(shape=(ancho,self.ancho_fac),
+        self.Dy    = self.add_weight(shape=(self.ancho_fac,ancho),
                              initializer=tf.keras.initializers.Constant(value=0.01),
                              trainable=True)
         self.Dz    = self.add_weight(shape=(self.profun_fac,profun),
@@ -215,15 +215,15 @@ class XoLayer(layers.Layer):
         #Aux = tf.reshape(Aux,(self.ancho,self.largo,self.profun))
         #Aux = tf.reshape(tf.transpose(Aux,perm=[1,0,2]),(1,self.ancho,self.largo,self.profun))
         
-        Aux = tf.transpose(tf.matmul(kernel_,Dz_))
+        Aux = (tf.matmul(kernel_,Dz_))
         Aux = tf.reshape(Aux,( self.largo_fac,self.ancho_fac*self.profun))
         Aux = tf.matmul(Dx_,Aux)
         Aux = tf.reshape(Aux,(self.largo,self.ancho_fac,self.profun))
-        Aux = tf.transpose(Aux,perm=[1,0,2])
-        Aux = tf.reshape(Aux,(self.ancho_fac,self.ancho*self.profun))
-        Aux = tf.matmul(Dy_,Aux)
-        Aux = tf.reshape(Aux,(self.ancho,self.largo,self.profun))
-        Aux = tf.reshape(tf.transpose(Aux,perm=[1,0,2]),(1,self.largo,self.ancho,self.profun))
+        Aux = tf.transpose(Aux,perm=[0,2,1])
+        Aux = tf.reshape(Aux,(self.ancho*self.profun,self.ancho_fac))
+        Aux = tf.matmul(Aux,Dy_)
+        Aux = tf.reshape(Aux,(self.largo,self.profun,self.ancho))
+        Aux = tf.reshape(tf.transpose(Aux,perm=[0,2,1]),(1,self.largo,self.ancho,self.profun))
         
         return  Aux
     
