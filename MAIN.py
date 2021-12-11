@@ -185,13 +185,13 @@ class XoLayer(layers.Layer):
                              initializer=tf.keras.initializers.Constant(value=0.01),#'glorot_normal',
                              trainable=True)
            
-        self.Dx    = self.add_weight(shape=(self.profun_fac,largo),
+        self.Dx    = self.add_weight(shape=(largo,self.largo_fac),
                              initializer=tf.keras.initializers.Constant(value=0.01), # uniform
                              trainable=True)
         self.Dy    = self.add_weight(shape=(ancho,self.ancho_fac),
                              initializer=tf.keras.initializers.Constant(value=0.01),
                              trainable=True)
-        self.Dz    = self.add_weight(shape=(profun,self.profun_fac),
+        self.Dz    = self.add_weight(shape=(self.profun_fac,profun),
                             initializer=tf.keras.initializers.Constant(value=0.01),
                              trainable=True)
 
