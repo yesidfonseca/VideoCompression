@@ -379,7 +379,7 @@ class myCallback(tf.keras.callbacks.Callback):
             xo = func(np.zeros(shape=(m,n,L)))
             xo = np.asarray(xo).reshape((m,n,L),order="F")
             
-            func = K.function([self.model.layers[0].input],[self.model.layers[len(self.model.layers)-2].output])
+            func = K.function([self.model.layers[0].input],[self.model.layers[len(self.model.layers)-1].output])
             result = func(np.zeros(shape=(m,n,L)))
             result = np.asarray(result).reshape((m,n,L),order="F")
             
