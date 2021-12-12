@@ -43,13 +43,13 @@ def VisualGraphs(RstActual,RstBest,ZTuckerRepr,ConvCurve,Original,ColorBands):
     fig, axs = plt.subplots(1,4,figsize=(22,22))
     fig.subplots_adjust(left=.05, bottom=0.1, right=.9, top=0.9, wspace=0.05)            
     
-    RGB = Original[:,:,ColorBands]/np.max(Original)
+    RGB = Original[:,:,ColorBands]#/np.max(Original)
     RGB = RGBZoom(RGB)
     axs[0].imshow(RGB)
     axs[0].set_title('Original')
     axs[0].axis('off')
     
-    RGB = RstBest[:,:,ColorBands]/np.max(RstBest)
+    RGB = RstBest[:,:,ColorBands]#/np.max(RstBest)
     RGB = RGBZoom(RGB)
     axs[1].imshow(RGB)
     axs[1].set_title('Best Reconstruction')
