@@ -177,9 +177,9 @@ class XoLayer(layers.Layer):
         self.Min = MinValue;
         self.Nbits = Nbits
 
-        self.largo_fac = tf.cast(tf.math.round(largo*factXY),dtype=tf.int32)
-        self.ancho_fac = tf.cast(tf.math.round(ancho*factXY),dtype=tf.int32)
-        self.profun_fac = tf.cast(tf.math.round(profun*factZ),dtype=tf.int32)
+        self.largo_fac = tf.cast(tf.math.ceil(largo*factXY),dtype=tf.int32)
+        self.ancho_fac = tf.cast(tf.math.ceil(ancho*factXY),dtype=tf.int32)
+        self.profun_fac = tf.cast(tf.math.ceil(profun*factZ),dtype=tf.int32)
 
           
         self.kernel = self.add_weight(shape=(self.largo_fac*self.ancho_fac,self.profun_fac), 
