@@ -221,7 +221,7 @@ class XoLayer(layers.Layer):
         Aux = tf.matmul(Dx_,Aux)
         Aux = tf.reshape(Aux,(self.largo,self.ancho_fac,self.profun))
         Aux = tf.transpose(Aux,perm=[0,2,1])
-        Aux = tf.reshape(Aux,(self.ancho*self.profun,self.ancho_fac))
+        Aux = tf.reshape(Aux,(self.largo*self.profun,self.ancho_fac))
         Aux = tf.matmul(Aux,Dy_)
         Aux = tf.reshape(Aux,(self.largo,self.profun,self.ancho))
         Aux = tf.reshape(tf.transpose(Aux,perm=[0,2,1]),(1,self.largo,self.ancho,self.profun))
