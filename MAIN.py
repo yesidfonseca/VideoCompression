@@ -167,19 +167,19 @@ def Hxfunction2(x,largo,ancho,profun,H):
 
 
 class XoLayer(layers.Layer):
-    def __init__(self, largo = 256, ancho = 256, profun = 10, factXY = 0.3,factZ=.3,Nbits = 8, MaxValue =1,MinValue=-1):
+    def __init__(self, shape_original = (256,256, 10), shape_compressed = (256,256,10),Nbits = 8, MaxValue =1,MinValue=-1):
         super(XoLayer, self).__init__()
 
-        self.largo  = largo
-        self.ancho  = ancho
-        self.profun  = profun
+        self.largo  = shape_original[0]
+        self.ancho  = shape_original[1]
+        self.profun  = shape_original[2]
         self.Max =MaxValue;
         self.Min = MinValue;
         self.Nbits = Nbits
 
-        self.largo_fac = tf.cast(tf.math.ceil(largo*factXY),dtype=tf.int32)
-        self.ancho_fac = tf.cast(tf.math.ceil(ancho*factXY),dtype=tf.int32)
-        self.profun_fac = tf.cast(tf.math.ceil(profun*factZ),dtype=tf.int32)
+        self.largo_fac = shape_compressed[0]
+        self.ancho_fac = shape_compressed[1]
+        self.profun_fac = shape_compressed[2]
 
           
         self.kernel = self.add_weight(shape=(self.largo_fac*self.ancho_fac,self.profun_fac), 
